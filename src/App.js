@@ -8,7 +8,8 @@ import {
 } from "firebase/auth";
 import "./App.css";
 import LoggedIn from "./components/afterLogin.jsx"
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link} from "react-router-dom";
+
 
 function App() {
   
@@ -16,6 +17,8 @@ function App() {
   let password=''
   const [users, setUser] = React.useState({});
   const [loading, setLoading] = React.useState(true);
+  const [showLoggedIn, setShowLoggedIn] = React.useState(false);
+
 
   React.useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -36,6 +39,8 @@ function App() {
        alert("Email already exist");
       });
   }
+
+  //const element = document.getElementById("App").style.display  
   // "email123@email.com", "test1234"
   function log_in() {
     setLoading(true)    
@@ -43,9 +48,9 @@ function App() {
       
       .then((userCredential) => {
         console.log(`hey youre signed in`);  
-        // window.open().location.href = `${window.location.origin}.components/log.html`
         setUser(userCredential.user);
-        
+        document.getElementById("appWrapper").style.display = "none"
+        setShowLoggedIn(true)
       })
       .catch((error) => {
         alert("User not Found, Try Registering an account")
@@ -56,6 +61,8 @@ function App() {
     signOut(auth);
     setUser({});
     console.log("logged out");
+     document.getElementById("appWrapper").style.display = "unset"
+     setShowLoggedIn (false)
   }
   function userEmail(){
     email = document.getElementById("email").value
@@ -66,40 +73,41 @@ function App() {
   
   }
 
-  
-
   return (
   
     <div className="App">
       <div className="row">
-        <div className="appWrapper">
+        <div id="appWrapper">
           <div className="inputWrapper">
           <input id="email" onInput={(userEmail)} type={'email'} placeholder={'Email'}></input>
           <input id="password" onInput={(userPass)} type={'password'} placeholder={'Password'}></input>
           </div>
-          <div className="button__wrapper">
-          <Router>
-          
-            
-              <Link to="/loggedIn" className="button" onClick={log_in}>  
-                  login
-              </Link>
-
-            <Routes>  
-              <Route path="/loggedIn" element={<LoggedIn></LoggedIn>}>
-               
-                {/* <button className="button" onClick={open} >log in</button>  */}
-              </Route>
-            </Routes>
-          </Router>
+          <div className="button__wrapper"> 
+              {/* <button className="button" onClick={log_in} >log in</button>  */}
+              <Router>
+                <Link to="/loggedIn" className="button"  onClick={log_in}>Log in</Link>
+              </Router>
           <button className=" button__register" onClick={register}>Register</button>
-          <button className="button" onClick={log_out}>log out</button> 
+         
            {loading ? "loading...." : users.email}
          
           </div>
         </div>
-      </div>
+      
+      {/* <div className="loggedIn__wrapper">
+      <Router>
+            <Routes>
+              <Route path="/loggedIn" element={<LoggedIn></LoggedIn>}></Route>
+            </Routes>
+        </Router>
+        <button className="button" onClick={log_out}>log out</button> 
+        </div> */}
+        <div className="loggedIn">
+          {showLoggedIn ? <LoggedIn logout={log_out}> </LoggedIn>  : ""}
+        </div>
+        </div>
     </div>
+    
  
   );
 }
