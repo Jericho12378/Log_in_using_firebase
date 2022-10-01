@@ -95,3 +95,20 @@ a{
 .trashtalk{
   text-align: center;
 }
+/*
+RESPONSIVE
+*/
+@media (max-width:480px) {
+  #appWrapper{
+    width: 200px;
+  }
+  .button{
+    width: 90px;
+    font-size: 12px;
+    
+  }
+  input{
+    font-size: 10px;
+    height: 32px;
+  }
+}
